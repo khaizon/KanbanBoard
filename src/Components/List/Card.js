@@ -7,14 +7,14 @@ const useStyle = makeStyles((theme) => ({
     }
 }))
 
-export default function Card() {
+export default function Card({card}) {
 
     const classes = useStyle();
 
     return (
         <div>
             <Paper className={classes.card}>
-                Following along youtube video
+                {card.content}
             </Paper>
         </div>
     )
