@@ -5,7 +5,7 @@ import storeApi from "../../utils/storeApi";
 
 const useStyle = makeStyles((theme) => ({
 	card: {
-		margin: theme.spacing(0,1,1,1),
+		margin: theme.spacing(0, 1, 1, 1),
 		paddingBottom: theme.spacing(4)
 	},
 	input: {
@@ -15,31 +15,34 @@ const useStyle = makeStyles((theme) => ({
 		margin: theme.spacing(1),
 		background: "#5AAC44",
 		color: "#fff",
-		"&:hover":{
-			background: alpha("#5AAC44",0.25)
+		"&:hover": {
+			background: alpha("#5AAC44", 0.25)
 		}
 	}
 }))
 
-export default function InputCard({setOpen, listId}) {
-	
+export default function InputCard({ setOpen, listId, type }) {
+
 	const classes = useStyle();
-	const [cardContent, setCardContent] = useState('');
-	const {addNewCard} = useContext(storeApi);
+	const [Title, setTitle] = useState('');
+	const { addNewCard, addNewList } = useContext(storeApi);
 	const handleOnChange = (e) => {
-		setCardContent(e.target.value)
+		setTitle(e.target.value)
 	};
 
 	const handleBtnConfirm = () => {
-		addNewCard(cardContent, listId);
-		setCardContent('');
-		setOpen(false);
+		if (type === "card") {
+			addNewCard(Title, listId);
+			setTitle('');
+			setOpen(false);
+		} else {
+			addNewList(Title);
+			setTitle('');
+			setOpen(false);
+		}
 	}
 
-	const handleBlur = () => {
-		setOpen(false);
-		setCardContent('');
-	}
+
 
 	return (
 		<div>
@@ -48,18 +51,18 @@ export default function InputCard({setOpen, listId}) {
 					<InputBase
 						onChange={handleOnChange}
 						multiline
-						fullWidth 
+						fullWidth
 						inputProps={{
 							className: classes.input
 						}}
-						value={cardContent}
-						placeholder={"Enter card description"}
-						onBlur={handleBlur}/>
+						value={Title}
+						placeholder={type === "list" ? "Enter list title" : "Enter card description"}
+						onBlur={() => setOpen(false)} />
 				</Paper>
 			</div>
 			<div>
-				<Button className={classes.btnConfirm} onClick={handleBtnConfirm}>Add Card</Button>
-				<IconButton onClick={()=> setOpen(false)}>
+				<Button className={classes.btnConfirm} onMouseDown={handleBtnConfirm}>Add {type}</Button>
+				<IconButton onClick={() => setOpen(false)}>
 					<Clear />
 				</IconButton>
 			</div>

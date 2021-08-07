@@ -2,54 +2,67 @@ import { Typography, InputBase } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core"
 import { MoreHoriz } from "@material-ui/icons";
+import storeApi from "../../utils/storeApi";
+import { useContext } from "react";
 
 const useStyle = makeStyles((theme) => ({
-    editableTitleContainer: {
-        margin: theme.spacing(1),
-        display: 'flex',
-    },
-    editableTitle: {
-        flexGrow: 1,
-        fontSize: '1.2rem',
-        fontWeight: 'bold',
-    },
-    input: {
-        fontSize: '1.2rem',
-        fontWeight: 'bold',
-        margin: theme.spacing(1),
-        '&:focus': {
-            background: '#ddd',
-        },
-    },
+	editableTitleContainer: {
+		margin: theme.spacing(1),
+		display: 'flex',
+	},
+	editableTitle: {
+		flexGrow: 1,
+		fontSize: '1.2rem',
+		fontWeight: 'bold',
+	},
+	input: {
+		fontSize: '1.2rem',
+		fontWeight: 'bold',
+		margin: theme.spacing(1),
+		'&:focus': {
+			background: '#ddd',
+		},
+	},
 }));
 
-export default function Title({title}) {
-    const [open, setOpen] = useState();
-    const classes = useStyle();
-    return (
-        <div>
+export default function Title({ title, listId }) {
+	const [open, setOpen] = useState();
+	const [newTitle, setNewTitle] = useState(title);
+	const classes = useStyle();
+	const { updateListTitle } = useContext(storeApi);
+	const handleOnChange = (e) => {
+		setNewTitle(e.target.value);
+	}
 
-            {!open ?
-                (<div className={classes.editableTitleContainer}>
-                    <Typography
-                        onClick={() => setOpen(!open)}
-                        className={classes.editableTitle}>{title}
-                    </Typography>
+	const handleOnBlur = () => {
+		updateListTitle(newTitle, listId);
+		setOpen(false);
+	}
+	return (
+		<div>
 
-                    <MoreHoriz />
-                </div>)
-                :
-                (<div>
-                    <InputBase
-                        autoFocus
-                        value={title}
-                        inputProps={{
-                            className: classes.input,
-                        }}
-                        onBlur={() => setOpen(!open)}
-                    />
-                </div>)
-            }
-        </div>
-    )
+			{!open ?
+				(<div className={classes.editableTitleContainer}>
+					<Typography
+						onClick={() => setOpen(!open)}
+						className={classes.editableTitle}>{newTitle}
+					</Typography>
+
+					<MoreHoriz />
+				</div>)
+				:
+				(<div>
+					<InputBase
+						autoFocus
+						value={newTitle}
+						inputProps={{
+							className: classes.input,
+						}}
+						onBlur={handleOnBlur}
+						onChange={handleOnChange}
+					/>
+				</div>)
+			}
+		</div>
+	)
 }
