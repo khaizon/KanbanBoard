@@ -5,11 +5,13 @@ import { v4 as uuid } from "uuid";
 import StoreApi from "./utils/storeApi";
 import { makeStyles } from "@material-ui/core"
 import InputContainer from "./Components/Input/InputContainer";
+import { DragDropContext } from "react-beautiful-dnd";
 
 
 const useStyle = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    overflowY: 'auto'
   }
 }))
 
@@ -70,15 +72,53 @@ function App() {
     setData(newState);
   }
 
+  const onDragEnd = (result) => {
+    const { destination, source, draggableId } = result;
+    console.log("destination", destination, "source", source, "draggableId", draggableId);
+
+    if (!destination) {
+      return;
+    }
+    const sourceList = data.lists[source.droppableId];
+    const destinationList = data.lists[destination.droppableId];
+    const draggingCard = sourceList.cards.filter(
+      (card) => card.id === draggableId
+    )[0];
+    if (source.droppableId === destination.droppableId) {
+      sourceList.cards.splice(source.index, 1);
+      destinationList.cards.splice(destination.index, 0, draggingCard);
+      const newState = {
+        ...data, lists: {
+          ...data.lists, [sourceList.id]: destinationList
+        }
+      };
+      setData(newState);
+    } else {
+      sourceList.cards.splice(source.index, 1);
+      destinationList.cards.splice(destination.index, 0, draggingCard);
+      const newState = {
+        ...data, lists: {
+          ...data.lists, 
+          [sourceList.id]: sourceList,
+          [destinationList.id]: destinationList
+        }
+      };
+      setData(newState);
+    }
+
+  }
+
   return (
     <StoreApi.Provider value={{ addNewCard, addNewList, updateListTitle }}>
-      <div className={classes.root}>
-        {data.listIds.map(listId => {
-          const list = data.lists[listId];
-          return (<List list={list} key={listId} />)
-        })}
-        <InputContainer type="list"/>
-      </div>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className={classes.root}>
+          {data.listIds.map(listId => {
+            const list = data.lists[listId];
+            return (<List list={list} key={listId} />)
+          })}
+          <InputContainer type="list" />
+        </div>
+      </DragDropContext>
     </StoreApi.Provider>
   );
 }
