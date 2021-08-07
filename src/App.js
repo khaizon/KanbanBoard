@@ -1,143 +1,117 @@
-import { useState } from "react";
-import List from "./Components/List/List";
-import store from "./utils/store"
-import { v4 as uuid } from "uuid";
-import StoreApi from "./utils/storeApi";
-import { makeStyles } from "@material-ui/core"
-import InputContainer from "./Components/Input/InputContainer";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import { useState } from 'react';
+import store from './utils/store';
+import { v4 as uuid } from 'uuid';
+import Board from './Board';
+import { Button } from '@material-ui/core';
 
-
-const useStyle = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-    overflowY: 'auto'
-  }
-}))
-
-function App() {
-
-  const [data, setData] = useState(store);
-  const classes = useStyle();
-  const addNewCard = (content, listId) => {
-    const newCardId = uuid();
-    console.log(newCardId);
-    const newCard = {
-      id: newCardId,
-      content
-    };
-
-    const list = data.lists[listId];
-    list.cards = [...list.cards, newCard]
-
-    const newState = {
-      ...data,
-      lists: {
-        ...data.lists,
-        [listId]: list,
-      }
-    }
-    setData(newState);
-  }
-
-  const addNewList = (title) => {
-    const newListId = uuid();
-    const newList = {
-      id: newListId,
-      title,
-      cards: []
-    };
-
-    const newState = {
-      listIds: [...data.listIds, newListId],
-      lists: {
-        ...data.lists,
-        [newListId]: newList
-      }
-    };
-
-    setData(newState);
-  }
-
-  const updateListTitle = (title, listId) => {
-    const list = data.lists[listId];
-    list.title = title;
-
-    const newState = {
-      ...data, lists: {
-        ...data.lists, [listId]: list
-      }
-    };
-
-    setData(newState);
-  }
-
-  const onDragEnd = (result) => {
-    const { destination, source, draggableId, type } = result;
-    console.log("destination", destination, "source", source, "draggableId", draggableId);
-
-    if (!destination) {
-      return;
-    }
-
-    if(type==="list") {
-      const newListIds = data.listIds;
-      newListIds.splice(source.index,1);
-      newListIds.splice(destination.index,0,draggableId);
-
-      const newState = {
-        ...data,
-        listIds: newListIds,
-      }
-      setData(newState);
-      return;
-    }
-    const sourceList = data.lists[source.droppableId];
-    const destinationList = data.lists[destination.droppableId];
-    const draggingCard = sourceList.cards.filter(
-      (card) => card.id === draggableId
-    )[0];
-    if (source.droppableId === destination.droppableId) {
-      sourceList.cards.splice(source.index, 1);
-      destinationList.cards.splice(destination.index, 0, draggingCard);
-      const newState = {
-        ...data, lists: {
-          ...data.lists, [sourceList.id]: destinationList
-        }
-      };
-      setData(newState);
-    } else {
-      sourceList.cards.splice(source.index, 1);
-      destinationList.cards.splice(destination.index, 0, draggingCard);
-      const newState = {
-        ...data, lists: {
-          ...data.lists,
-          [sourceList.id]: sourceList,
-          [destinationList.id]: destinationList
-        }
-      };
-      setData(newState);
-    }
-
-  }
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
 
   return (
-    <StoreApi.Provider value={{ addNewCard, addNewList, updateListTitle }}>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="app" type="list">
-          {(provided) => (
-            <div className={classes.root} ref={provided.innerRef}>
-              {data.listIds.map((listId,index) => {
-                const list = data.lists[listId];
-                return (<List list={list} key={listId} index={index}/>)
-              })}
-              <InputContainer type="list" />
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
-    </StoreApi.Provider>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={1}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
   );
 }
 
-export default App;
+TabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.any.isRequired,
+  value: PropTypes.any.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    display: "flex",
+    flexGrow: '1',
+    backgroundColor: theme.palette.background.paper,
+  }
+}));
+
+export default function App() {
+  const classes = useStyles();
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const [data, setData] = useState(store);
+
+  const handleOnClick = () => {
+    const newBoardId = uuid();
+    const newState = {
+      boards: {
+        ...data.boards,
+        [newBoardId]: {
+          id: newBoardId,
+          title: "title",
+          lists: {},
+          listIds: [],
+        },
+      },
+      boardIds: [
+        ...data.boardIds,
+        newBoardId
+      ]
+    };
+    console.log(newState);
+    setData(newState);
+  }
+
+  return (
+    <div>
+      <div className={classes.root}>
+
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="simple tabs example" i
+          ndicatorColor="primary"
+          textColor="primary">
+          {
+            data.boardIds.map((boardId, index) => (
+              <Tab label={data.boards[boardId].title} {...a11yProps(index)} />
+            ))
+          }
+        </Tabs>
+        <Button variant="contained" color="primary" onClick={handleOnClick}>
+          New Board
+        </Button>
+      </div>
+      <div>
+
+        {
+          data.boardIds.map((boardId, index) => (
+            <TabPanel value={value} index={index} >
+              <Board board={data.boards[boardId]} />
+            </TabPanel>
+          ))
+        }
+      </div>
+    </div>
+  );
+}

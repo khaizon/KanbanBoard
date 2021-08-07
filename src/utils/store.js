@@ -14,19 +14,27 @@ const cards = [
 ];
 
 const data = {
-  lists: {
-    'list-1': {
-      id: 'list-1',
-      title: 'Todo',
-      cards,
-    },
-    'list-2': {
-      id: 'list-2',
-      title: 'Doing',
-      cards: [],
-    },
+  boards:{
+    'board-1': {
+      id: "board-1",
+      title: "Project 1",
+      lists: {
+        'list-1': {
+          id: 'list-1',
+          title: 'Todo',
+          cards,
+        },
+        'list-2': {
+          id: 'list-2',
+          title: 'Doing',
+          cards: [],
+        },
+      },
+      listIds: ['list-1', 'list-2'],
+    }
   },
-  listIds: ['list-1', 'list-2'],
+  boardIds: ['board-1']
+  
 };
 
 export default data;
