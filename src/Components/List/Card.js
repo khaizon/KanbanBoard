@@ -29,8 +29,6 @@ export default function Card({ card, index, boardId, listId }) {
     }
 
     return (
-
-
         <Draggable draggableId={card.id} index={index}>
             {(provided) => (
                 <div  ref={provided.innerRef}  >

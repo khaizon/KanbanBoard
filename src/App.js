@@ -49,6 +49,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexGrow: '1',
     backgroundColor: theme.palette.background.paper,
+  },
+  tabs: {
+    marginRight: '40px'
   }
 }));
 
@@ -327,10 +330,11 @@ export default function App() {
             onChange={handleChange}
             aria-label="simple tabs example"
             indicatorColor="primary"
-            textColor="primary">
+            textColor="primary"
+            variant="scrollable">
             {
               data.boardIds.map((boardId, index) => (
-                <div>
+                <div className={classes.tabs}>
                   <CustomTab label={data.boards[boardId].title} {...a11yProps(index)} setTab={setValue} index={index} boardId={boardId} />
                 </div>
               ))
