@@ -18,7 +18,7 @@ const useStyle = makeStyles((theme) => ({
 }))
 
 
-export default function List({ list, index }) {
+export default function List({ list, index, boardId }) {
 
 	const classes = useStyle();
 	return (
@@ -39,7 +39,7 @@ export default function List({ list, index }) {
 							)
 							}
 						</Droppable>
-						<InputContainer listId={list.id} type="card" />
+						<InputContainer listId={list.id} type="card" boardId={boardId}/>
 					</Paper>
 				</div>
 			)}

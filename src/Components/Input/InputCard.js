@@ -22,7 +22,7 @@ const useStyle = makeStyles((theme) => ({
 	}
 }))
 
-export default function InputCard({ setOpen, listId, type }) {
+export default function InputCard({ setOpen, listId, type, boardId }) {
 
 	const classes = useStyle();
 	const [Title, setTitle] = useState('');
@@ -33,11 +33,11 @@ export default function InputCard({ setOpen, listId, type }) {
 
 	const handleBtnConfirm = () => {
 		if (type === "card") {
-			addNewCard(Title, listId);
+			addNewCard(Title, boardId, listId);
 			setTitle('');
 			setOpen(false);
 		} else {
-			addNewList(Title);
+			addNewList(Title, boardId);
 			setTitle('');
 			setOpen(false);
 		}

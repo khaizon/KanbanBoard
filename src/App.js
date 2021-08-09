@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import CustomTab from './Components/Board/CustomTab';
 import Typography from '@material-ui/core/Typography';
+import StoreApi from './utils/storeApi';
 import Box from '@material-ui/core/Box';
 import { useState } from 'react';
 import store from './utils/store';
 import { v4 as uuid } from 'uuid';
-import Board from './Board';
-import { Button } from '@material-ui/core';
+import Board from './Components/Board/Board';
+import { Button, InputBase } from '@material-ui/core';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -54,12 +55,74 @@ const useStyles = makeStyles((theme) => ({
 export default function App() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
+  const [data, setData] = useState(store);
+
+
+  const updateListTitle = (title, boardId, listId) => {
+    const list = data.boards[boardId].lists[listId];
+    list.title = title;
+
+    const newState = {
+      ...data.boards[boardId], lists: {
+        ...data.boards[boardId].lists, [listId]: list
+      }
+    };
+
+    setData(newState);
+  }
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const [data, setData] = useState(store);
+  const addNewCard = (content, boardId, listId) => {
+    const newCardId = uuid();
+    console.log(newCardId);
+    const newCard = {
+      id: newCardId,
+      content
+    };
+
+    const list = data.boards[boardId].lists[listId];
+    list.cards = [...list.cards, newCard]
+
+    const newState = {
+      ...data.boards[boardId],
+      lists: {
+        ...data.boards[boardId].lists,
+        [listId]: list,
+      }
+    }
+    setData(newState);
+  }
+
+  const addNewList = (title, boardId) => {
+    const newListId = uuid();
+    const newList = {
+      id: newListId,
+      title,
+      cards: []
+    };
+
+    const newState = {
+      boards: {
+        ...data.boards,
+        [boardId]: {
+          ...data.boards[boardId],
+          listIds: [...data.boards[boardId].listIds, newListId],
+          lists: {
+            ...data.boards[boardId].lists,
+            [newListId]: newList
+          }
+
+        }
+      },
+      boardIds: [...data.boardIds]
+
+    };
+
+    setData(newState);
+  }
 
   const handleOnClick = () => {
     const newBoardId = uuid();
@@ -82,36 +145,93 @@ export default function App() {
     setData(newState);
   }
 
-  return (
-    <div>
-      <div className={classes.root}>
+  const updateBoardTitle = () => {
 
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="simple tabs example" i
-          ndicatorColor="primary"
-          textColor="primary">
+  }
+
+  const onDragEnd = (result, boardId) => {
+    const { destination, source, draggableId, type } = result;
+    console.log("destination", destination, "source", source, "draggableId", draggableId);
+
+    if (!destination) {
+      return;
+    }
+
+    if (type === "list") {
+      const newListIds = data.boards[boardId].listIds;
+      newListIds.splice(source.index, 1);
+      newListIds.splice(destination.index, 0, draggableId);
+
+      const newState = {
+        ...data.boards[boardId],
+        listIds: newListIds,
+      }
+      setData(newState);
+      return;
+    }
+    const sourceList = data.boards[boardId].lists[source.droppableId];
+    const destinationList = data.boards[boardId].lists[destination.droppableId];
+    const draggingCard = sourceList.cards.filter(
+      (card) => card.id === draggableId
+    )[0];
+    if (source.droppableId === destination.droppableId) {
+      sourceList.cards.splice(source.index, 1);
+      destinationList.cards.splice(destination.index, 0, draggingCard);
+      const newState = {
+        ...data.boards[boardId], lists: {
+          ...data.boards[boardId].lists, [sourceList.id]: destinationList
+        }
+      };
+      setData(newState);
+    } else {
+      sourceList.cards.splice(source.index, 1);
+      destinationList.cards.splice(destination.index, 0, draggingCard);
+      const newState = {
+        ...data.boards[boardId], lists: {
+          ...data.boards[boardId].lists,
+          [sourceList.id]: sourceList,
+          [destinationList.id]: destinationList
+        }
+      };
+      setData(newState);
+    }
+
+  }
+
+  return (
+    <StoreApi.Provider value={{ addNewCard, addNewList, updateListTitle, onDragEnd, updateBoardTitle }}>
+      <div>
+        <div className={classes.root}>
+
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="simple tabs example" i
+            ndicatorColor="primary"
+            textColor="primary">
+            {
+              data.boardIds.map((boardId, index) => (
+                <div>
+                  <CustomTab label={data.boards[boardId].title} {...a11yProps(index)} setTab={setValue} index={index} />
+                </div>
+              ))
+            }
+          </Tabs>
+          <Button variant="contained" color="primary" onClick={handleOnClick}>
+            New Board
+          </Button>
+        </div>
+        <div>
+
           {
             data.boardIds.map((boardId, index) => (
-              <Tab label={data.boards[boardId].title} {...a11yProps(index)} />
+              <TabPanel value={value} index={index} >
+                <Board board={data.boards[boardId]} />
+              </TabPanel>
             ))
           }
-        </Tabs>
-        <Button variant="contained" color="primary" onClick={handleOnClick}>
-          New Board
-        </Button>
+        </div>
       </div>
-      <div>
-
-        {
-          data.boardIds.map((boardId, index) => (
-            <TabPanel value={value} index={index} >
-              <Board board={data.boards[boardId]} />
-            </TabPanel>
-          ))
-        }
-      </div>
-    </div>
+    </StoreApi.Provider>
   );
 }
