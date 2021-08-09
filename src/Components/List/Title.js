@@ -1,13 +1,14 @@
 import { Typography, InputBase } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core"
-import { MoreHoriz } from "@material-ui/icons";
+import { Delete } from "@material-ui/icons";
 import storeApi from "../../utils/storeApi";
 import { useContext } from "react";
 
 const useStyle = makeStyles((theme) => ({
 	editableTitleContainer: {
 		margin: theme.spacing(1),
+		padding: theme.spacing(1),
 		display: 'flex',
 	},
 	editableTitle: {
@@ -23,13 +24,17 @@ const useStyle = makeStyles((theme) => ({
 			background: '#ddd',
 		},
 	},
+	deleteButton: {
+		color: '#6b1f40',
+		verticalAlign: 'middle',
+	}
 }));
 
 export default function Title({ title, boardId, listId }) {
 	const [open, setOpen] = useState();
 	const [newTitle, setNewTitle] = useState(title);
 	const classes = useStyle();
-	const { updateListTitle } = useContext(storeApi);
+	const { updateListTitle, deleteList } = useContext(storeApi);
 	const handleOnChange = (e) => {
 		setNewTitle(e.target.value);
 	}
@@ -47,8 +52,7 @@ export default function Title({ title, boardId, listId }) {
 						onClick={() => setOpen(!open)}
 						className={classes.editableTitle}>{newTitle}
 					</Typography>
-
-					<MoreHoriz />
+					<Delete className={classes.deleteButton} onClick={()=>deleteList(boardId, listId)}/>
 				</div>)
 				:
 				(<div>

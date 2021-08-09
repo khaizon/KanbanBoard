@@ -9,7 +9,7 @@ import { useState } from 'react';
 import store from './utils/store';
 import { v4 as uuid } from 'uuid';
 import Board from './Components/Board/Board';
-import { Button, InputBase } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -95,8 +95,8 @@ export default function App() {
 
     const newCards = [];
 
-    cards.map((card)=>{
-      if (card.id ===cardId){
+    cards.map((card) => {
+      if (card.id === cardId) {
         console.log('hi');
       } else {
         newCards.push(card)
@@ -171,6 +171,35 @@ export default function App() {
 
     };
 
+    setData(newState);
+  }
+
+  const deleteList = (boardId, listId) => {
+    const lists = data.boards[boardId].lists;
+    const listIds = data.boards[boardId].listIds
+
+    const newLists = {};
+
+    Object.keys(lists).map((id) => {
+      if (id === listId) {
+        console.log('hi');
+      } else {
+        newLists[id] = lists[id];
+      }
+    })
+    console.log(newLists);
+
+    const newState = {
+      ...data,
+      boards: {
+        ...data.boards,
+        [boardId]: {
+          ...data.boards[boardId],
+          lists: newLists,
+          listIds: listIds.filter(id => id !== listId)
+        }
+      },
+    }
     setData(newState);
   }
   // end of list functions -------------------------------
@@ -289,20 +318,20 @@ export default function App() {
   }
 
   return (
-    <StoreApi.Provider value={{ addNewCard, addNewList, updateListTitle, onDragEnd, updateBoardTitle, deleteCard }}>
+    <StoreApi.Provider value={{ addNewCard, addNewList, updateListTitle, onDragEnd, updateBoardTitle, deleteCard, deleteList }}>
       <div>
         <div className={classes.root}>
 
           <Tabs
             value={value}
             onChange={handleChange}
-            aria-label="simple tabs example" 
+            aria-label="simple tabs example"
             indicatorColor="primary"
             textColor="primary">
             {
               data.boardIds.map((boardId, index) => (
                 <div>
-                  <CustomTab label={data.boards[boardId].title} {...a11yProps(index)} setTab={setValue} index={index} boardId={boardId}/>
+                  <CustomTab label={data.boards[boardId].title} {...a11yProps(index)} setTab={setValue} index={index} boardId={boardId} />
                 </div>
               ))
             }

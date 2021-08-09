@@ -1,31 +1,46 @@
 import { Tab, InputBase } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core"
-import { Edit } from "@material-ui/icons";
+import { Edit, Delete } from "@material-ui/icons";
 import storeApi from "../../utils/storeApi";
 import { useContext } from "react";
 
 const useStyle = makeStyles((theme) => ({
+  root: {
+    // display: 'flex'
+  },
 	editableTitleContainer: {
-		margin: theme.spacing(1),
-		display: 'flex',
-    borderRadius: '2px',
-    backgroundColor: 'grey'
+		// margin: theme.spacing(1),
+    borderRadius: '5px',
 	},
 	editableTitle: {
 		flexGrow: 1,
 		fontSize: '1.2rem',
 		fontWeight: 'bold',
-    float: 'center',
+    color: 'primary',
 	},
 	input: {
-
 		fontSize: '1.2rem',
 		fontWeight: 'bold',
+    paddingLeft:theme.spacing(1),
+    fontColor: 'primary',
 		'&:focus': {
-			background: '#ddd',
+			background: '#e3e3e3',
 		},
+    color: 'primary',
 	},
+	inputContainer: {
+    marginTop: '5px',
+	},
+	editButton: {
+    color: '#1f43c1',
+    verticalAlign: 'middle'
+	},
+	deleteButton: {
+    color: '#6b1f40',
+    verticalAlign: 'middle'
+	},
+  
 }));
 
 export default function CustomTab({label, index, boardId, setTab}) {
@@ -35,7 +50,9 @@ export default function CustomTab({label, index, boardId, setTab}) {
 
 	const { updateBoardTitle } = useContext(storeApi);
 	const handleOnChange = (e) => {
+    updateBoardTitle(boardId, newTitle);
 		setNewTitle(e.target.value);
+
 	}
 
 	const handleOnBlur = () => {
@@ -49,17 +66,19 @@ export default function CustomTab({label, index, boardId, setTab}) {
 		setOpen(true);
   }
 	return (
-		<div>
+		<div className={classes.root}>
 
 			{!open ?
 				(<div className={classes.editableTitleContainer}>
+          
 					<Tab label={label} onClick={()=> setTab(index)}						
 						className={classes.editableTitle}>{newTitle}
 					</Tab>
-          <Edit onClick={handleOnClick}/>
+          <Edit onClick={handleOnClick} className={classes.editButton}/>
+          <Delete className={classes.deleteButton}/>
 				</div>)
 				:
-				(<div>
+				(<div className={classes.inputContainer}>
 					<InputBase
 						autoFocus
 						value={newTitle}
