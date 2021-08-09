@@ -39,9 +39,15 @@ export default function CustomTab({label, index, boardId, setTab}) {
 	}
 
 	const handleOnBlur = () => {
-		updateBoardTitle(newTitle, boardId);
+		updateBoardTitle(boardId, newTitle);
+    setTab(index);
 		setOpen(false);
 	}
+
+  const handleOnClick = () => {
+    setTab(index);
+		setOpen(true);
+  }
 	return (
 		<div>
 
@@ -50,7 +56,7 @@ export default function CustomTab({label, index, boardId, setTab}) {
 					<Tab label={label} onClick={()=> setTab(index)}						
 						className={classes.editableTitle}>{newTitle}
 					</Tab>
-          <Edit onClick={() => setOpen(!open)}/>
+          <Edit onClick={handleOnClick}/>
 				</div>)
 				:
 				(<div>

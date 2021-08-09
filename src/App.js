@@ -57,24 +57,11 @@ export default function App() {
   const [value, setValue] = useState(0);
   const [data, setData] = useState(store);
 
-
-  const updateListTitle = (title, boardId, listId) => {
-    const list = data.boards[boardId].lists[listId];
-    list.title = title;
-
-    const newState = {
-      ...data.boards[boardId], lists: {
-        ...data.boards[boardId].lists, [listId]: list
-      }
-    };
-
-    setData(newState);
-  }
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
+  // card functions -------------------------------
   const addNewCard = (content, boardId, listId) => {
     const newCardId = uuid();
     console.log(newCardId);
@@ -99,6 +86,63 @@ export default function App() {
         }
       },
     }
+    setData(newState);
+  }
+
+  const deleteCard = (boardId, listId, cardId) => {
+
+    const cards = data.boards[boardId].lists[listId].cards;
+
+    const newCards = [];
+
+    cards.map((card)=>{
+      if (card.id ===cardId){
+        console.log('hi');
+      } else {
+        newCards.push(card)
+      }
+    })
+    console.log(newCards);
+
+    const newState = {
+      ...data,
+      boards: {
+        ...data.boards,
+        [boardId]: {
+          ...data.boards[boardId],
+          lists: {
+            ...data.boards[boardId].lists,
+            [listId]: {
+              ...data.boards[boardId].lists[listId],
+              cards: newCards
+            },
+          }
+        }
+      },
+    }
+    setData(newState);
+  }
+  // end of card functions -------------------------------
+
+  // list functions -------------------------------
+  const updateListTitle = (title, boardId, listId) => {
+    const list = data.boards[boardId].lists[listId];
+    list.title = title;
+
+    const newState = {
+      ...data,
+      boards: {
+        ...data.boards,
+        [boardId]: {
+          ...data.boards[boardId],
+          lists: {
+            ...data.boards[boardId].lists,
+            [listId]: list
+          }
+        }
+      }
+    };
+
     setData(newState);
   }
 
@@ -129,8 +173,10 @@ export default function App() {
 
     setData(newState);
   }
+  // end of list functions -------------------------------
 
-  const handleOnClick = () => {
+  // board functions -------------------------------
+  const addNewBoard = () => {
     const newBoardId = uuid();
     const newState = {
       boards: {
@@ -151,9 +197,24 @@ export default function App() {
     setData(newState);
   }
 
-  const updateBoardTitle = () => {
+  const updateBoardTitle = (boardId, title) => {
+    console.log(boardId, title)
+    const board = data.boards[boardId];
+    console.log(boardId);
+    console.log(board);
+    board.title = title;
 
+    const newState = {
+      ...data,
+      boards: {
+        ...data.boards,
+        [boardId]: board
+      }
+    };
+
+    setData(newState);
   }
+  // board functions -------------------------------
 
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
@@ -228,25 +289,25 @@ export default function App() {
   }
 
   return (
-    <StoreApi.Provider value={{ addNewCard, addNewList, updateListTitle, onDragEnd, updateBoardTitle }}>
+    <StoreApi.Provider value={{ addNewCard, addNewList, updateListTitle, onDragEnd, updateBoardTitle, deleteCard }}>
       <div>
         <div className={classes.root}>
 
           <Tabs
             value={value}
             onChange={handleChange}
-            aria-label="simple tabs example" i
-            ndicatorColor="primary"
+            aria-label="simple tabs example" 
+            indicatorColor="primary"
             textColor="primary">
             {
               data.boardIds.map((boardId, index) => (
                 <div>
-                  <CustomTab label={data.boards[boardId].title} {...a11yProps(index)} setTab={setValue} index={index} />
+                  <CustomTab label={data.boards[boardId].title} {...a11yProps(index)} setTab={setValue} index={index} boardId={boardId}/>
                 </div>
               ))
             }
           </Tabs>
-          <Button variant="contained" color="primary" onClick={handleOnClick}>
+          <Button variant="contained" color="primary" onClick={addNewBoard}>
             New Board
           </Button>
         </div>

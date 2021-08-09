@@ -18,14 +18,14 @@ const useStyle = makeStyles((theme) => ({
 
 
 
-export default function Card({ card, index }) {
+export default function Card({ card, index, boardId, listId }) {
 
     const classes = useStyle();
 
     const { deleteCard } = useContext(storeApi);
 
     const handleOnClick = () => {
-
+        deleteCard(boardId, listId, card.id);
     }
 
     return (

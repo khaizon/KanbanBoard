@@ -25,7 +25,7 @@ const useStyle = makeStyles((theme) => ({
 	},
 }));
 
-export default function Title({ title, listId }) {
+export default function Title({ title, boardId, listId }) {
 	const [open, setOpen] = useState();
 	const [newTitle, setNewTitle] = useState(title);
 	const classes = useStyle();
@@ -35,7 +35,7 @@ export default function Title({ title, listId }) {
 	}
 
 	const handleOnBlur = () => {
-		updateListTitle(newTitle, listId);
+		updateListTitle(newTitle, boardId, listId);
 		setOpen(false);
 	}
 	return (

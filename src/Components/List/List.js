@@ -27,19 +27,19 @@ export default function List({ list, index, boardId }) {
 				<div ref={provided.innerRef} {...provided.draggableProps}>
 					<Paper className={classes.root} {...provided.dragHandleProps}>
 						<CssBaseline />
-						<Title title={list.title} listId={list.id} />
+						<Title title={list.title} listId={list.id} boardId={boardId} />
 						<Droppable droppableId={list.id} >
 							{(provided) => (
 								<div ref={provided.innerRef} {...provided.droppableProps} className={classes.cardContainer}>
 									{list.cards.map((card, index) => (
-										<Card key={card.id} card={card} index={index} />
+										<Card key={card.id} card={card} index={index} boardId={boardId} listId={list.id}/>
 									))}
 									{provided.placeholder}
 								</div>
 							)
 							}
 						</Droppable>
-						<InputContainer listId={list.id} type="card" boardId={boardId}/>
+						<InputContainer listId={list.id} type="card" boardId={boardId} />
 					</Paper>
 				</div>
 			)}
