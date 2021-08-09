@@ -14,7 +14,6 @@ const useStyle = makeStyles((theme) => ({
     borderRadius: '5px',
 	},
 	editableTitle: {
-		flexGrow: 1,
 		fontSize: '1.2rem',
 		fontWeight: 'bold',
     color: 'primary',

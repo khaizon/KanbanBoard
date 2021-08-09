@@ -5,7 +5,6 @@ import storeApi from "../../utils/storeApi";
 
 const useStyle = makeStyles((theme) => ({
 	card: {
-		width: '280px',
 		margin: theme.spacing(0, 1, 1, 1),
 		paddingBottom: theme.spacing(4)
 	},

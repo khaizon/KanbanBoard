@@ -4,12 +4,11 @@ import InputCard from "./InputCard";
 
 const useStyle = makeStyles((theme) => ({
     root: {
-        width: '300px',
         marginTop: theme.spacing(1),
     },
     addCard: {
         padding: theme.spacing(1, 1, 1, 2),
-        margin: theme.spacing(0, 1, 1, 1),
+        margin: theme.spacing(0, 0, 0, 1),
         background: "#EBECF0",
         "&:hover": {
             background: alpha("#000", .25)
