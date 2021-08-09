@@ -87,11 +87,17 @@ export default function App() {
     list.cards = [...list.cards, newCard]
 
     const newState = {
-      ...data.boards[boardId],
-      lists: {
-        ...data.boards[boardId].lists,
-        [listId]: list,
-      }
+      ...data,
+      boards: {
+        ...data.boards,
+        [boardId]: {
+          ...data.boards[boardId],
+          lists: {
+            ...data.boards[boardId].lists,
+            [listId]: list,
+          }
+        }
+      },
     }
     setData(newState);
   }
