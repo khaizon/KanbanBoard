@@ -155,7 +155,7 @@ export default function App() {
 
   }
 
-  const onDragEnd = (result, boardId) => {
+  const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
     console.log("destination", destination, "source", source, "draggableId", draggableId);
 
@@ -164,19 +164,25 @@ export default function App() {
     }
 
     if (type === "list") {
-      const newListIds = data.boards[boardId].listIds;
+      const newListIds = data.boards[data.boardIds[value]].listIds;
       newListIds.splice(source.index, 1);
       newListIds.splice(destination.index, 0, draggableId);
 
       const newState = {
-        ...data.boards[boardId],
-        listIds: newListIds,
+        ...data,
+        boards: {
+          ...data.boards,
+          [data.boardIds[value]]: {
+            ...data.boards[data.boardIds[value]],
+            listIds: newListIds,
+          }
+        }
       }
       setData(newState);
       return;
     }
-    const sourceList = data.boards[boardId].lists[source.droppableId];
-    const destinationList = data.boards[boardId].lists[destination.droppableId];
+    const sourceList = data.boards[data.boardIds[value]].lists[source.droppableId];
+    const destinationList = data.boards[data.boardIds[value]].lists[destination.droppableId];
     const draggingCard = sourceList.cards.filter(
       (card) => card.id === draggableId
     )[0];
@@ -184,8 +190,17 @@ export default function App() {
       sourceList.cards.splice(source.index, 1);
       destinationList.cards.splice(destination.index, 0, draggingCard);
       const newState = {
-        ...data.boards[boardId], lists: {
-          ...data.boards[boardId].lists, [sourceList.id]: destinationList
+        ...data,
+        boards: {
+          ...data.boards,
+          //board
+          [data.boardIds[value]]: {
+            ...data.boards[data.boardIds[value]],
+            lists: {
+              ...data.boards[data.boardIds[value]].lists,
+              [sourceList.id]: destinationList
+            }
+          }
         }
       };
       setData(newState);
@@ -193,10 +208,18 @@ export default function App() {
       sourceList.cards.splice(source.index, 1);
       destinationList.cards.splice(destination.index, 0, draggingCard);
       const newState = {
-        ...data.boards[boardId], lists: {
-          ...data.boards[boardId].lists,
-          [sourceList.id]: sourceList,
-          [destinationList.id]: destinationList
+        ...data,
+        boards: {
+          ...data.boards,
+          //board
+          [data.boardIds[value]]: {
+            ...data.boards[data.boardIds[value]],
+            lists: {
+              ...data.boards[data.boardIds[value]].lists,
+              [sourceList.id]: sourceList,
+              [destinationList.id]: destinationList
+            }
+          }
         }
       };
       setData(newState);
