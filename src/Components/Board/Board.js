@@ -1,9 +1,9 @@
 import { useContext } from "react";
 import List from "../List/List";
-import { Container, Grid, makeStyles, } from "@material-ui/core"
+import { Grid, makeStyles, } from "@material-ui/core"
 import InputContainer from "../Input/InputContainer";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import storeApi from "../../utils/storeApi";
+import { BoardContext } from "../../utils/BoardContext";
 
 
 
@@ -15,10 +15,15 @@ function Board({ board }) {
 
   const classes = useStyle();
 
-  const { onDragEnd } = useContext(storeApi);
+  const { dispatch } = useContext(BoardContext);
+
+  const handleOnDragEnd = (result) => {
+    console.log(result)
+    dispatch({type: "ON_DRAG_END", boardId: board.id, result})
+  }
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={handleOnDragEnd}>
 
 
       <Droppable droppableId="app" type="list">

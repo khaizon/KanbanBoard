@@ -2,7 +2,7 @@ import { Typography, InputBase } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core"
 import { Delete } from "@material-ui/icons";
-import storeApi from "../../utils/storeApi";
+import { BoardContext } from "../../utils/BoardContext";
 import { useContext } from "react";
 
 const useStyle = makeStyles((theme) => ({
@@ -34,13 +34,13 @@ export default function Title({ title, boardId, listId }) {
 	const [open, setOpen] = useState();
 	const [newTitle, setNewTitle] = useState(title);
 	const classes = useStyle();
-	const { updateListTitle, deleteList } = useContext(storeApi);
+	const { dispatch } = useContext(BoardContext);
 	const handleOnChange = (e) => {
 		setNewTitle(e.target.value);
 	}
 
 	const handleOnBlur = () => {
-		updateListTitle(newTitle, boardId, listId);
+		dispatch({ type: "UPDATE_LIST_TITLE", boardId, listId, title: newTitle });
 		setOpen(false);
 	}
 	return (
@@ -52,7 +52,10 @@ export default function Title({ title, boardId, listId }) {
 						onClick={() => setOpen(!open)}
 						className={classes.editableTitle}>{newTitle}
 					</Typography>
-					<Delete className={classes.deleteButton} onClick={()=>deleteList(boardId, listId)}/>
+					<Delete className={classes.deleteButton} onClick={
+						() => dispatch(
+							{ type: "DELETE_LIST", boardId, listId  }
+						)} />
 				</div>)
 				:
 				(<div>

@@ -1,4 +1,4 @@
-import { CssBaseline, Grid, Paper } from "@material-ui/core"
+import { CssBaseline, Paper } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core"
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import InputContainer from "../Input/InputContainer";

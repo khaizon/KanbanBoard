@@ -1,8 +1,8 @@
-import { Tab, InputBase, Grid } from "@material-ui/core";
+import { Tab, InputBase } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core"
 import { Edit, Delete } from "@material-ui/icons";
-import storeApi from "../../utils/storeApi";
+import { BoardContext } from "../../utils/BoardContext";
 import { useContext } from "react";
 
 const useStyle = makeStyles((theme) => ({
@@ -46,15 +46,15 @@ export default function CustomTab({ label, index, boardId, setTab }) {
   const [newTitle, setNewTitle] = useState(label);
   const classes = useStyle();
 
-  const { updateBoardTitle } = useContext(storeApi);
+  const { dispatch } = useContext(BoardContext);
   const handleOnChange = (e) => {
-    updateBoardTitle(boardId, newTitle);
+    dispatch({type: "UPDATE_BOARD_TITLE", boardId,title: newTitle});
     setNewTitle(e.target.value);
 
   }
 
   const handleOnBlur = () => {
-    updateBoardTitle(boardId, newTitle);
+    dispatch({type: "UPDATE_BOARD_TITLE", boardId,title: newTitle});
     setTab(index);
     setOpen(false);
   }

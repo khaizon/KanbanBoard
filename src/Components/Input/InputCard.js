@@ -1,7 +1,7 @@
 import { alpha, Button, IconButton, InputBase, makeStyles, Paper } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
 import { useContext, useState } from "react";
-import storeApi from "../../utils/storeApi";
+import { BoardContext } from "../../utils/BoardContext";
 
 const useStyle = makeStyles((theme) => ({
 	card: {
@@ -25,18 +25,18 @@ export default function InputCard({ setOpen, listId, type, boardId }) {
 
 	const classes = useStyle();
 	const [Title, setTitle] = useState('');
-	const { addNewCard, addNewList } = useContext(storeApi);
+	const { dispatch } = useContext(BoardContext);
 	const handleOnChange = (e) => {
 		setTitle(e.target.value)
 	};
 
 	const handleBtnConfirm = () => {
 		if (type === "card") {
-			addNewCard(Title, boardId, listId);
+			dispatch({type: "ADD_CARD", boardId, listId, content: Title});
 			setTitle('');
 			setOpen(false);
 		} else {
-			addNewList(Title, boardId);
+			dispatch({type: "ADD_LIST", boardId, title: Title});
 			setTitle('');
 			setOpen(false);
 		}

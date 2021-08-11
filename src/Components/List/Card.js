@@ -1,9 +1,8 @@
 import { makeStyles, Paper, Grid } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
-import { Fragment } from "react";
 import { useContext } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import storeApi from "../../utils/storeApi";
+import {BoardContext} from "../../utils/BoardContext";
 
 const useStyle = makeStyles((theme) => ({
     card: {
@@ -22,10 +21,10 @@ export default function Card({ card, index, boardId, listId }) {
 
     const classes = useStyle();
 
-    const { deleteCard } = useContext(storeApi);
+    const { dispatch } = useContext(BoardContext);
 
     const handleOnClick = () => {
-        deleteCard(boardId, listId, card.id);
+        dispatch({type: "DELETE_CARD", boardId, listId, cardId: card.id});
     }
 
     return (
