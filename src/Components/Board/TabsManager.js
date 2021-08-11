@@ -51,6 +51,13 @@ const useStyles = makeStyles((theme) => ({
   },
   tabs: {
     marginRight: '40px'
+  },
+  button: {
+    marginTop: '4px',
+    marginRight: '4px',
+    marginBottom: '4px',
+    fontSize: '1rem',
+		fontWeight: 'bold',
   }
 }));
 
@@ -84,7 +91,7 @@ export default function TabsManger() {
               ))
             }
           </Tabs>
-          <Button variant="contained" color="primary" onClick={()=> dispatch({type: "ADD_BOARD"})}>
+          <Button className={classes.button} variant="contained" color="primary" onClick={()=> dispatch({type: "ADD_BOARD"})}>
             New Board
           </Button>
         </div>
