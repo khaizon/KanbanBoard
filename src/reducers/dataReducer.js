@@ -7,7 +7,6 @@ export const dataReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_CARD':
       const newCardId = uuid();
-      console.log(newCardId);
       const newCard = {
         id: newCardId,
         content: action.content
@@ -37,12 +36,10 @@ export const dataReducer = (state, action) => {
 
       cards.map((card) => {
         if (card.id === action.cardId) {
-          console.log('hi');
         } else {
           newCards.push(card)
         }
       })
-      console.log(newCards);
 
       return {
         ...state,
@@ -89,8 +86,6 @@ export const dataReducer = (state, action) => {
 
 
     case 'UPDATE_LIST_TITLE':
-      console.log(action.boardId)
-      console.log(state.boards[action.boardId])
       var list = state.boards[action.boardId].lists[action.listId];
       list.title = action.title;
 
@@ -117,12 +112,10 @@ export const dataReducer = (state, action) => {
 
       Object.keys(lists).map((id) => {
         if (id === action.listId) {
-          console.log('hi');
         } else {
           newLists[id] = lists[id];
         }
       })
-      console.log(newLists);
 
       return {
         ...state,
@@ -155,10 +148,7 @@ export const dataReducer = (state, action) => {
       };
 
     case 'UPDATE_BOARD_TITLE':
-      console.log(action.boardId);
       const board = state.boards[action.boardId];
-      console.log(action.boardId);
-      console.log(board);
       board.title = action.title;
 
       return {
@@ -172,7 +162,6 @@ export const dataReducer = (state, action) => {
     case 'ON_DRAG_END':
 
       const { destination, source, draggableId, type } = action.result;
-      console.log("destination", destination, "source", source, "draggableId", draggableId);
 
       if (!destination) {
         return state;

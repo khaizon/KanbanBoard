@@ -1,6 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import { dataReducer } from "../reducers/dataReducer";
-import store from "../utils/store"
+import store from "./store"
 
 export const BoardContext = createContext();
 

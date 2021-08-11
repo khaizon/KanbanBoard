@@ -2,7 +2,7 @@ import { makeStyles, Paper, Grid } from "@material-ui/core";
 import { Clear } from "@material-ui/icons";
 import { useContext } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import {BoardContext} from "../../utils/BoardContext";
+import {BoardContext} from "../../contexts/BoardContext";
 
 const useStyle = makeStyles((theme) => ({
     card: {

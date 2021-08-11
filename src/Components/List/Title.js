@@ -2,7 +2,7 @@ import { Typography, InputBase } from "@material-ui/core";
 import { useState } from "react";
 import { makeStyles } from "@material-ui/core"
 import { Delete } from "@material-ui/icons";
-import { BoardContext } from "../../utils/BoardContext";
+import { BoardContext } from "../../contexts/BoardContext";
 import { useContext } from "react";
 
 const useStyle = makeStyles((theme) => ({

@@ -8,7 +8,7 @@ import Box from '@material-ui/core/Box';
 import { useContext, useState } from 'react';
 import Board from './Board';
 import { Button } from '@material-ui/core';
-import { BoardContext } from '../../utils/BoardContext';
+import { BoardContext } from '../../contexts/BoardContext';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;

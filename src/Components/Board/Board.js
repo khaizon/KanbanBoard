@@ -3,7 +3,7 @@ import List from "../List/List";
 import { Grid, makeStyles, } from "@material-ui/core"
 import InputContainer from "../Input/InputContainer";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { BoardContext } from "../../utils/BoardContext";
+import { BoardContext } from "../../contexts/BoardContext";
 
 
 
@@ -18,7 +18,6 @@ function Board({ board }) {
   const { dispatch } = useContext(BoardContext);
 
   const handleOnDragEnd = (result) => {
-    console.log(result)
     dispatch({type: "ON_DRAG_END", boardId: board.id, result})
   }
 
