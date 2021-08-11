@@ -8,7 +8,6 @@ const useStyle = makeStyles((theme) => ({
     },
     addCard: {
         padding: theme.spacing(1, 1, 1, 2),
-        margin: theme.spacing(0, 0, 0, 1),
         background: "#EBECF0",
         "&:hover": {
             background: alpha("#000", .25)

@@ -9,7 +9,6 @@ import Title from "./Title";
 const useStyle = makeStyles((theme) => ({
 	root: {
 		backgroundColor: '#EBECF0',
-		marginLeft: theme.spacing(1)
 	},
 	cardContainer: {
 		marginTop: theme.spacing(4)

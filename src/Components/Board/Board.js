@@ -8,7 +8,9 @@ import { BoardContext } from "../../contexts/BoardContext";
 
 
 const useStyle = makeStyles((theme) => ({
-
+  root: {
+    
+  }
 }))
 
 function Board({ board }) {
@@ -22,13 +24,13 @@ function Board({ board }) {
   }
 
   return (
-    <DragDropContext onDragEnd={handleOnDragEnd}>
+    <DragDropContext onDragEnd={handleOnDragEnd} >
 
 
       <Droppable droppableId="app" type="list">
         {(provided) => (
-          <div className={classes.root} ref={provided.innerRef}>
-            <Grid container className={classes.root} >
+          <div ref={provided.innerRef} className={classes.root}>
+            <Grid container  >
               {board.listIds.map((listId, index) => {
                 const list = board.lists[listId];
                 return (
