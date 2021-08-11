@@ -9,7 +9,7 @@ import { BoardContext } from "../../contexts/BoardContext";
 
 const useStyle = makeStyles((theme) => ({
   root: {
-    
+    padding: theme.spacing(1)
   }
 }))
 
@@ -30,7 +30,7 @@ function Board({ board }) {
       <Droppable droppableId="app" type="list">
         {(provided) => (
           <div ref={provided.innerRef} className={classes.root}>
-            <Grid container  >
+            <Grid container spacing={1}>
               {board.listIds.map((listId, index) => {
                 const list = board.lists[listId];
                 return (
